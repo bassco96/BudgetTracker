@@ -1,72 +1,84 @@
 import java.util.Scanner;
 
-public static void main(String[] args) {
+public class Main {
 
-    Scanner scanner = new Scanner(System.in);
-    BudgetTracker budget = new BudgetTracker();
+    public static void main(String[] args) {
 
-    boolean running = true;
+        Scanner scanner = new Scanner(System.in);
+        BudgetTracker budget = new BudgetTracker();
 
-    while (running){
-        System.out.println("\n==Budget Tracker==");
-        System.out.println("1. Add expense");
-        System.out.println("2. View all expenses");
-        System.out.println("3. Remove expense");
-        System.out.println("4. Exit");
-        System.out.println("Enter your choice: ");
+        boolean running = true;
 
-        String input = scanner.nextLine();
+        // Continue displaying the menu until the user chooses to exit.
+        while (running) {
+            System.out.println("\n== Budget Tracker ==");
+            System.out.println("1. Add expense");
+            System.out.println("2. View all expenses");
+            System.out.println("3. Remove expense");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
 
-        switch (input){
-            case "1":
-                System.out.print("Enter amount: $");
-                int amount = scanner.nextInt();
+            String input = scanner.nextLine();
 
-                System.out.print("Enter category: ");
-                String category = scanner.next();
+            switch (input) {
+                case "1":
+                    System.out.print("Enter amount: $");
+                    int amount = Integer.parseInt(scanner.nextLine());
 
-                System.out.print("Enter date: MoDaYr ");
-                int date = scanner.nextInt();
+                    System.out.print("Enter category: ");
+                    String category = scanner.nextLine();
 
-                Expense expense = new Expense(amount,category,date);
-                budget.addExpense(expense);
-                System.out.println("Expense has been added.");
-                break;
+                    System.out.print("Enter date (MoDaYr): ");
+                    int date = Integer.parseInt(scanner.nextLine());
 
-            case "2":
-                budget.viewExpenses();
-                break;
+                    // Create an Expense object from the user's input.
+                    Expense expense = new Expense(amount, category, date);
+                    budget.addExpense(expense);
 
-            case "3":
-                if (budget.isEmpty()) {
-                    System.out.println("Budget is empty!");
+                    System.out.println("Expense has been added.");
                     break;
-            }
-                else {
+
+                case "2":
                     budget.viewExpenses();
-                    System.out.println("Please enter the number of the expense you would like to remove OR " +
-                            "type 0 to return:");
-                    int selection = scanner.nextInt();
-                    if (selection == 0){
+                    break;
+
+                case "3":
+                    if (budget.isEmpty()) {
+                        System.out.println("Budget is empty!");
                         break;
                     }
-                    budget.removeExpense(selection);
-                    System.out.println("Expense has been removed.");
+
+                    budget.viewExpenses();
+
+                    System.out.print(
+                            "Enter the number of the expense to remove, or 0 to return: "
+                    );
+
+                    int selection = Integer.parseInt(scanner.nextLine());
+
+                    if (selection == 0) {
+                        break;
+                    }
+
+                    // removeExpense returns false if the user enters an invalid number.
+                    if (budget.removeExpense(selection)) {
+                        System.out.println("Expense has been removed.");
+                    } else {
+                        System.out.println("Invalid expense number.");
+                    }
+
                     break;
-                }
 
+                case "4":
+                    running = false;
+                    System.out.println("Exiting program... bye!");
+                    break;
 
-            case "4":
-                running = false;
-                System.out.print("Exiting program...bye!");
-                break;
-
+                default:
+                    System.out.println("Invalid choice. Please enter 1-4.");
+            }
         }
 
-
+        scanner.close();
     }
-
-    scanner.close();
-
-
 }
